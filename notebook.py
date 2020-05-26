@@ -60,14 +60,14 @@ def newLayer():
 
 
 model = Sequential()
-model.add(Convolution2D(32, (3, 3), input_shape=(img_width, img_height,3),activation='relu'))
+model.add(Convolution2D(64, (3, 3), input_shape=(img_width, img_height,3),activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
 model.add(Convolution2D(64, (3, 3),activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Convolution2D(64, (3, 3),activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+
+
 
 
 # In[8]:
@@ -90,7 +90,7 @@ model.compile(loss='binary_crossentropy',
 # In[10]:
 
 
-epochs = 5
+epochs = 7
 train_samples = 2048
 validation_samples = 832
 
