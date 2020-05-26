@@ -1,18 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[2]:
 
 
-##This notebook is built around using tensorflow as the backend for keras
-get_ipython().system('pip install pillow')
-get_ipython().system('KERAS_BACKEND=tensorflow python -c "from keras import backend"')
-
-
-# In[1]:
-
-
-##Updated to Keras 2.0
 import os
 import numpy as np
 from keras.models import Sequential
@@ -24,7 +15,7 @@ from keras import applications
 from keras.models import Model
 
 
-# In[2]:
+# In[3]:
 
 
 # dimensions of our images.
@@ -34,7 +25,7 @@ train_data_dir = 'data/train'
 validation_data_dir = 'data/validation'
 
 
-# In[3]:
+# In[4]:
 
 
 ##preprocessing
@@ -56,43 +47,47 @@ validation_generator = datagen.flow_from_directory(
         class_mode='binary')
 
 
-# In[4]:
+# In[5]:
 
 
-# a simple stack of 3 convolution layers with a ReLU activation and followed by max-pooling layers.
+def newLayer():
+    model.add(Convolution2D(128, (3, 3), input_shape=(img_width, img_height,3),activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
+
+# In[6]:
+
+
+
 model = Sequential()
 model.add(Convolution2D(32, (3, 3), input_shape=(img_width, img_height,3),activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Convolution2D(32, (3, 3),activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
 model.add(Convolution2D(64, (3, 3),activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Flatten())
-model.add(Dense(64,activation='relu'))
-
-model.add(Dense(1,activation='sigmoid'))
-
-
-# In[5]:
-
-
-model.compile(loss='binary_crossentropy',
-              optimizer='rmsprop',
-              metrics=['accuracy'])
+model.add(Convolution2D(64, (3, 3),activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
 
 # In[8]:
 
 
-def newLayer():
-    model.add(Convolution2D(32, (3, 3), input_shape=(img_width, img_height,3),activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128,activation='relu'))
+
+model.add(Dense(1,activation='sigmoid'))
 
 
-# In[6]:
+# In[9]:
+
+
+model.compile(loss='binary_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
+
+
+# In[10]:
 
 
 epochs = 5
@@ -100,10 +95,10 @@ train_samples = 2048
 validation_samples = 832
 
 
-# In[7]:
+# In[11]:
 
 
-model.fit_generator(
+result = model.fit_generator(
         train_generator,
         steps_per_epoch=train_samples // batch_size,
         epochs=epochs,
@@ -111,21 +106,41 @@ model.fit_generator(
         validation_steps=validation_samples// batch_size,)
 #About 60 seconds an epoch when using CPU
 
-model.save_weights('models/basic_cnn_30_epochs.h5')
-# In[ ]:
+
+# In[12]:
+
+
+result.history
+
+
+# In[13]:
 
 
 model.save('models/model_basic_cnn_30_epochs.h5')
 
 
-# In[ ]:
+# In[14]:
 
 
 model.save_weights('models/basic_cnn_30_epochs.h5')
 
 
+# In[19]:
+
+
+acc = result.history['val_accuracy'][4]*100
+
+
+# In[21]:
+
+
+file1=open("accuracy.txt","w")
+file1.write(str(result.history['val_accuracy'][4]*100))
+file1.close()
+
+
 # In[ ]:
 
 
-model.summay()
+
 
