@@ -128,14 +128,14 @@ model.save_weights('models/basic_cnn_30_epochs.h5')
 # In[19]:
 
 
-acc = result.history['val_accuracy'][4]*100
+acc = result.history['val_accuracy'][6]*100
 
 
 # In[21]:
 
 
 file1=open("accuracy.txt","w")
-file1.write(str(result.history['val_accuracy'][4]*100))
+file1.write(str(result.history['val_accuracy'][6]*100))
 file1.close()
 
 
